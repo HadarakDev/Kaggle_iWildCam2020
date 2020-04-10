@@ -13,12 +13,15 @@ def get_all_files_path(path):
 
 def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_folder):
     for file in jpg_files_list:
-        im = Image.open(path_folder + file)
-        out = im.resize((size_x, size_y))
-        out.save(new_path_folder + file)
+        try:
+            im = Image.open(path_folder + file)
+            out = im.resize((size_x, size_y))
+            out.save(new_path_folder + file)
+        except IOError:
+            print('cannot open', file)
 
 
 path = "..\\..\\..\\dataset\\train\\"
 new_path = "..\\..\\..\\dataset\\train_resized\\"
 jpg_files = get_all_files_path(path)
-resize_images = resize_save_images(jpg_files, 100, 100, path, new_path)
+resize_save_images(jpg_files, 100, 100, path, new_path)
