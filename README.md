@@ -13,3 +13,5 @@ Recup des images en plus des années precedente pour avoir une meilleur réparti
 Faire de la data augmentation sur les classes les moins fréquentes. => Rajouter une images avec un ID unique + rajouter dans le Json de référence.
 
 Stocker les valeurs image ID et Y dans un csv, comme pour la submission pour le training. => Ca nous permets de split/shuffle ou autre nos images dans la memoire
+
+Bagging avec des models différents
