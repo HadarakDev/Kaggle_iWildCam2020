@@ -15,3 +15,10 @@ Faire de la data augmentation sur les classes les moins fréquentes. => Rajouter
 Stocker les valeurs image ID et Y dans un csv, comme pour la submission pour le training. => Ca nous permets de split/shuffle ou autre nos images dans la memoire
 
 Bagging avec des models différents
+
+# Workflow
+
+- Train avec 2020 images ( full dataset)
+- Validation avec custom validation ( images 2017 uniquement classe commune avec 2020)
+- Matrix de confusion ( identifié les classes mal prédites )
+- rajouter des datas avec 2018, 2019 ( transfer learning)
