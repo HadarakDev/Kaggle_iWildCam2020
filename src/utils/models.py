@@ -20,6 +20,8 @@ def get_accuracy(model, X, Y):
 def model_fit(model, X_param, Y_param, epochs, batch_size, save_path, save_dir, basePath):
     log_dir = basePath + save_dir
     call_backs = get_callbacks(log_dir)
-    model.fit(X_param, Y_param, batch_size=batch_size, verbose=1, epochs=epochs, callbacks=call_backs, validation_split=0.2)
+    print(log_dir)
+    print(call_backs)
+    model.fit(X_param, Y_param, batch_size=batch_size, verbose=1, epochs=epochs, callbacks=call_backs)
     model.save(save_path)
     return model
