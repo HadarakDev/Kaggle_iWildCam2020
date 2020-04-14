@@ -1,7 +1,10 @@
 # from src.models.nn_sparse import nn_sparse
+from src.models.linear_sparse import linear
 from src.utils.tools import create_dirs, create_folder_from_categories, move_img_to_category_folder
 from src.utils.data import load_dataset_pool, get_number_of_img_percent, generate_dataset
 import time
+import tensorflow as tf
+import matplotlib as plt
 
 import numpy as np
 
@@ -10,12 +13,10 @@ if __name__ == '__main__':
     #print(X_all)
     # create_folder_from_categories("..\\categories.json")
     # move_img_to_category_folder("..\\annotations\\iwildcam2020_train_annotations.json", "..\\categories.json")
-    train_dataset = generate_dataset(path="D:\\DEV\\dataset\\train_resized", x=100, y=100, batch_size=1000)
-    print(train_dataset)
-    start_time = time.time()
-    X, Y = next(train_dataset)
-    elapsed_time = time.time() - start_time
-    print(elapsed_time)
+    batch = 10
+    train_dataset, STEPS_PER_EPOCH = generate_dataset(path="D:\\DEV\\dataset\\train_resized", x=100, y=100, batch_size=batch)
+    model = linear(train_dataset, 216, 30000, "relu", "adam", "categorical_crossentropy", 2, batch, 0.02, STEPS_PER_EPOCH)
+
 
     # for X, Y in train_dataset:
     #     start_time = time.time()

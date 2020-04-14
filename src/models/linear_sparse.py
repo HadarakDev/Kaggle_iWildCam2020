@@ -20,9 +20,9 @@ from src.utils.models import model_fit
 def linear_model(size, nb_output, activation, optimizer, loss, lr):
     optimizer_param = get_optimizer(optimizer, lr)
     model = tf.keras.Sequential()
-    model.add(Dense(1, activation=activation, input_dim=size))
+    model.add(Dense(1, activation=activation, input_shape=(100, 100, 3)))
     model.add(Dense(nb_output, activation="softmax", input_dim=1))
-    model.compile(optimizer=optimizer_param, loss=loss, metrics=['sparse_categorical_accuracy'])
+    model.compile(optimizer=optimizer_param, loss=loss, metrics=['categorical_accuracy'])
     return model
 
 
@@ -32,16 +32,14 @@ def predict_linear(model, X):
     return res
 
 
-def linear_sparse(X_all, Y, image_size, activation, optimizer, loss, epochs, batch_size, lr, save_dir, base_path):
-    nb_output = np.max(Y) + 1
-    directory = base_path + save_dir
-    if not os.path.exists(directory):
-        os.mkdir(directory)
-    path = directory + "/model.h5"
-    print(path)
+def linear(train_data_generator, nb_output, image_size, activation, optimizer, loss, epochs, batch_size, lr, STEPS_PER_EPOCH):
+    # directory = base_path + save_dir
+    # if not os.path.exists(directory):
+    #     os.mkdir(directory)
+    # path = directory + "/model.h5"\
     model = linear_model(image_size, nb_output,
-                            activation, optimizer, loss, lr)
+                         activation, optimizer, loss, lr)
 
-    model = model_fit(model, X_all, Y,
-                        epochs, batch_size,
-                        path, save_dir, base_path)
+    model = model_fit(model, train_data_generator, epochs, batch_size, STEPS_PER_EPOCH)
+
+    return model

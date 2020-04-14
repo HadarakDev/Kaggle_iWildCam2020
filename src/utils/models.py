@@ -16,12 +16,14 @@ def get_accuracy(model, X, Y):
     res = model.predict(X)
     return accuracy_score(Y, res)
 
-# base path
-def model_fit(model, X_param, Y_param, epochs, batch_size, save_path, save_dir, basePath):
-    log_dir = basePath + save_dir
-    call_backs = get_callbacks(log_dir)
-    print(log_dir)
-    print(call_backs)
-    model.fit(X_param, Y_param, batch_size=batch_size, verbose=1, epochs=epochs, callbacks=call_backs)
-    model.save(save_path)
+
+def model_fit(model, train_data_generator, epochs, batch_size, STEPS_PER_EPOCH):
+    # log_dir = basePath + save_dir
+    # call_backs = get_callbacks(log_dir)
+    # print(log_dir)
+    # print(call_backs)
+    model.fit_generator(generator=train_data_generator, steps_per_epoch=STEPS_PER_EPOCH, epochs=epochs, verbose=1)
+
+    # model.fit(X_param, Y_param, batch_size=batch_size, verbose=1, epochs=epochs) # , callbacks=call_backs)
+    # model.save(save_path)
     return model
