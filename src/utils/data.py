@@ -1,7 +1,13 @@
 import glob
+import random
+
 import numpy as np
 from PIL import Image
 from multiprocessing import Pool, Array
+
+
+def get_number_of_img_percent(percent, nb_img):
+    return int(percent / 100 * nb_img)
 
 
 def load_dataset(path, size):
@@ -21,6 +27,7 @@ def load_dataset(path, size):
             print('cannot open', file)
     return dataset
 
+
 def open_img_thread(jpg_file):
     try:
         im = Image.open(jpg_file)
@@ -29,20 +36,31 @@ def open_img_thread(jpg_file):
         dataset = img / 255
         return dataset
     except IOError:
-        #print('cannot open', jpg_file)
+        print('cannot open', jpg_file)
         return None
 
 
-def load_dataset_pool(path):
+def load_dataset_pool(path, percent):
     jpg_files_list = get_all_files_path(path)
     jpg_files_list = [path + f for f in jpg_files_list]
+    # get indexes images to load
+    nb_images_to_extract = get_number_of_img_percent(percent, len(jpg_files_list))
+
     p = Pool()
+    all_params = []
     params = []
     print(len(jpg_files_list))
     for i in range(len(jpg_files_list)):
-        params.append(jpg_files_list[i])
+        all_params.append(jpg_files_list[i])
 
-    print("params done")
+    print(nb_images_to_extract)
+    while nb_images_to_extract > 0:
+        params.append(all_params.pop(random.randrange(len(all_params))))
+        nb_images_to_extract = nb_images_to_extract - 1
+
+    print(nb_images_to_extract)
+    print(params)
+    print(len(params))
     result = p.map(open_img_thread, params)
     p.close()
     p.join()
@@ -66,7 +84,6 @@ def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_fol
             out.save(new_path_folder + file)
         except IOError:
             print('cannot open', file)
-
 
 # path = "..\\..\\..\\dataset\\train\\"
 # new_path = "..\\..\\..\\dataset\\train_resized\\"
