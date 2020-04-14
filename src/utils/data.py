@@ -1,9 +1,13 @@
+import os
 import glob
 import random
-
+import tensorflow as tf
 import numpy as np
 from PIL import Image
 from multiprocessing import Pool, Array
+from pathlib import Path
+import matplotlib.pyplot as plt
+
 
 
 def get_number_of_img_percent(percent, nb_img):
@@ -89,3 +93,24 @@ def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_fol
 # new_path = "..\\..\\..\\dataset\\train_resized\\"
 # jpg_files = get_all_files_path(path)
 # resize_save_images(jpg_files, 100, 100, path, new_path)
+
+
+def generate_dataset(path, x, y, batch_size):
+    data_dir = Path(path)
+    image_count = len(list(data_dir.glob('*/*.jpg')))
+
+    CLASS_NAMES = []
+    for item in data_dir.glob('*'):
+        dir = os.listdir(item)
+        if len(dir) != 0:
+            CLASS_NAMES.append(item.name)
+
+    image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
+    STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
+
+    train_data_gen = image_generator.flow_from_directory(directory=str(data_dir),
+                                                         batch_size=batch_size,
+                                                         shuffle=True,
+                                                         target_size=(x, y),
+                                                         classes=list(CLASS_NAMES))
+    return train_data_gen
