@@ -7,7 +7,7 @@ from PIL import Image
 from multiprocessing import Pool, Array
 from pathlib import Path
 import matplotlib.pyplot as plt
-
+import shutil
 
 
 def get_number_of_img_percent(percent, nb_img):
@@ -121,3 +121,11 @@ def generate_dataset(path, x, y, batch_size):
                        [None, len(CLASS_NAMES)]))
 
     return train_dataset, STEPS_PER_EPOCH
+
+
+def move_validation_to_train_folder(path_validation):
+    for root, directories, filenames in os.walk(path_validation):
+        for filename in filenames:
+            source = os.path.join(root, filename)
+            dest = os.path.join(root, filename).replace("validation", "train")
+            shutil.move(source, dest)
