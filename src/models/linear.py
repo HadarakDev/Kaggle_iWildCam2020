@@ -36,7 +36,7 @@ def predict_linear(model, X):
     return res
 
 
-def linear(train_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, batch_size, lr, STEPS_PER_EPOCH):
+def linear(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, batch_size, lr, STEPS_PER_EPOCH):
     name_folder = inspect.stack()[0][3]
     directory = "..\\models\\" + name_folder + "\\test_change_my_name"
     if not os.path.exists(directory):
@@ -45,6 +45,6 @@ def linear(train_dataset, nb_output, size_x, size_y, activation, optimizer, loss
     model = linear_model(size_x, size_y, nb_output,
                          activation, optimizer, loss, lr, batch_size)
 
-    model = model_fit(model, train_dataset, epochs, batch_size, STEPS_PER_EPOCH, directory)
+    model = model_fit(model, train_dataset, test_dataset, epochs, batch_size, STEPS_PER_EPOCH, directory)
 
     return model

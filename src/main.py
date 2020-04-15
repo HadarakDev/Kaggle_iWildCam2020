@@ -10,22 +10,26 @@ import numpy as np
 
 
 if __name__ == '__main__':
-    split_dataset("C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\train_resized", "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\val", .2)
+    create_dirs()
 
-    # path_train_folder = "E:\\dataset\\train_resized"
+    #split_dataset("C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\train_resized", "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\val", .2)
+
+    # path_train_folder = "E:\\dataset\\train_resized
+    path_train_folder = "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\train_resized"
+    path_val_folder ="C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\val"
     # # Linear
-    # batch = 100
-    # number_of_classes = 216
-    # size_image_flatten = 30000
-    # size_x = 100
-    # size_y = 100
-    # epochs = 10
-    # learning_rate = 0.2
-    #
-    # train_dataset, STEPS_PER_EPOCH = generate_dataset(path=path_train_folder, x=size_x, y=size_y,
-    #                                                   batch_size=batch)
-    # model = linear(train_dataset, number_of_classes, size_x, size_y, "relu", "adam", "categorical_crossentropy", epochs,
-    #                batch, learning_rate, STEPS_PER_EPOCH)
+    batch = 100
+    number_of_classes = 216
+    size_image_flatten = 30000
+    size_x = 100
+    size_y = 100
+    epochs = 100
+    learning_rate = 0.0001
+
+    train_dataset, STEPS_PER_EPOCH = generate_dataset(path=path_train_folder, x=size_x, y=size_y, batch_size=batch)
+    test_dataset, STEPS_PER_EPOCH = generate_dataset(path=path_train_folder, x=size_x, y=size_y, batch_size=batch)
+    model = linear(train_dataset, test_dataset,  number_of_classes, size_x, size_y, "linear", "adamax", "categorical_crossentropy", epochs,
+                   batch, learning_rate, STEPS_PER_EPOCH)
 
 
 # create_folder_from_categories("..\\categories.json")
