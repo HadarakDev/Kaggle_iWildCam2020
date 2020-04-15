@@ -34,7 +34,8 @@ def linear_model(size, nb_output, activation, optimizer, loss, lr, batch_size):
 
     optimizer_param = get_optimizer(optimizer, lr)
     model = tf.keras.Sequential()
-    model.add(Dense(1, activation=activation, batch_input_shape=(None, 100, 100, 3)))
+    model.add(Flatten(batch_input_shape=(None, 100, 100, 3)))
+    model.add(Dense(1, activation=activation))
     model.add(Dense(nb_output))
     model.compile(optimizer=optimizer_param, loss=loss, metrics=['categorical_accuracy'])
     return model

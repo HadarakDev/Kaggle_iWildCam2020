@@ -16,7 +16,7 @@ if __name__ == '__main__':
     batch = 100
     number_of_classes = 2
     size_image_flatten = 30000
-    train_dataset, STEPS_PER_EPOCH = generate_dataset(path="D:\\DEV\\dataset\\test", x=100, y=100, batch_size=batch)
+    train_dataset, STEPS_PER_EPOCH = generate_dataset(path="E:\\dataset\\test\\", x=100, y=100, batch_size=batch)
 
 
     model = linear(train_dataset, number_of_classes, size_image_flatten, "relu", "adam", "categorical_crossentropy", 2, batch, 0.02, STEPS_PER_EPOCH)
