@@ -20,6 +20,6 @@ def get_accuracy(model, X, Y):
 def model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory):
     call_backs = get_callbacks(directory)
     model.fit_generator(generator=train_dataset, validation_data=test_dataset, steps_per_epoch=STEPS_PER_EPOCH_TRAIN,
-                        validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1, callbacks=call_backs)
+                        validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1) # callbacks=call_backs)
     model.save(directory + "\\model.h5")
     return model

@@ -18,14 +18,14 @@ if __name__ == '__main__':
     path_val_folder ="E:\\dataset\\validation_resized"
     # # Linear
     batch = 1000
-    number_of_classes = 216
+    number_of_classes = 267
     size_x = 100
     size_y = 100
     epochs = 100
     learning_rate = 0.0001
 
     train_dataset, STEPS_PER_EPOCH_TRAIN = generate_dataset(path=path_train_folder, x=size_x, y=size_y, batch_size=batch)
-    test_dataset, STEPS_PER_EPOCH_VALIDATION = generate_dataset(path=path_train_folder, x=size_x, y=size_y, batch_size=batch)
+    test_dataset, STEPS_PER_EPOCH_VALIDATION = generate_dataset(path=path_val_folder, x=size_x, y=size_y, batch_size=batch)
     model = linear(train_dataset, test_dataset,  number_of_classes, size_x, size_y, "selu", "adam", "categorical_crossentropy", epochs,
                    batch, learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION)
 

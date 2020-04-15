@@ -125,8 +125,8 @@ def generate_dataset(path, x, y, batch_size):
 
     CLASS_NAMES = []
     for item in data_dir.glob('*'):
-        dir = os.listdir(item)
-        if len(dir) != 0:
+        # dir = os.listdir(item)
+        # if len(dir) != 0:
             CLASS_NAMES.append(item.name)
 
     image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
