@@ -2,3 +2,5 @@
 *.png
 .idea/
 __pycache__/
+*.trace
+*.profile-empty
