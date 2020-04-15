@@ -8,28 +8,25 @@ import matplotlib as plt
 
 import numpy as np
 
+
 if __name__ == '__main__':
-    # X_all = load_dataset_pool("..\\..\\dataset\\train_resized\\", 10)
-    # print(X_all)
-    # create_folder_from_categories("..\\categories.json")
-    # move_img_to_category_folder("..\\annotations\\iwildcam2020_train_annotations.json", "..\\categories.json")
+    create_dirs()
+
+    path_train_folder = "E:\\dataset\\train_resized"
+    # Linear
     batch = 100
     number_of_classes = 216
     size_image_flatten = 30000
+    size_x = 100
+    size_y = 100
+    epochs = 10
+    learning_rate = 0.2
 
-    train_dataset, STEPS_PER_EPOCH = generate_dataset(path="E:\\dataset\\train_resized\\", x=100, y=100,
+    train_dataset, STEPS_PER_EPOCH = generate_dataset(path=path_train_folder, x=size_x, y=size_y,
                                                       batch_size=batch)
-    model = linear(train_dataset, number_of_classes, size_image_flatten, "relu", "adam", "categorical_crossentropy", 2,
-                   batch, 0.02, STEPS_PER_EPOCH)
+    model = linear(train_dataset, number_of_classes, size_x, size_y, "relu", "adam", "categorical_crossentropy", epochs,
+                   batch, learning_rate, STEPS_PER_EPOCH)
 
-    # for X, Y in train_dataset:
-    #     start_time = time.time()
-    #     print(X)
-    #     print(Y)
 
-# Y = np.zeros(len(X_all))
-#
-# create_dirs()
-# print(len(X_all))
-# print(len(Y))
-# nn_sparse(X_all, Y, 3, "selu", "adam", "categorical_crossentropy", 500, 1000, 0.0001, "./", "./", [512, 512, 512, 512], 0.2, 0, 0)
+# create_folder_from_categories("..\\categories.json")
+# move_img_to_category_folder("..\\annotations\\iwildcam2020_train_annotations.json", "..\\categories.json")

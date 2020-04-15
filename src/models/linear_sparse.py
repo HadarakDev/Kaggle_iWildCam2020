@@ -2,6 +2,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import Dense, Flatten, Conv2D
 import numpy as np
 import os
+import inspect
 
 from src.utils.tools import get_optimizer
 from src.utils.models import model_fit
@@ -19,22 +20,10 @@ from src.utils.models import model_fit
 """
 
 
-def linear_model(size, nb_output, activation, optimizer, loss, lr, batch_size):
-    # optimizer_param = get_optimizer(optimizer, lr)
-    #
-    # inputs = tf.keras.Input(shape=(30000,))
-    # x = tf.keras.layers.Dense(1, activation=activation, name='linear')(inputs)
-    # outputs = tf.keras.layers.Dense(10, activation="softmax", name='predictions')(x)
-    # model = tf.keras.Model(inputs=inputs, outputs=outputs)
-    #
-    # model.compile(optimizer=optimizer_param,
-    #               loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
-    #               metrics=['categorical_accuracy'])
-    # return model
-
+def linear_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, batch_size):
     optimizer_param = get_optimizer(optimizer, lr)
     model = tf.keras.Sequential()
-    model.add(Flatten(batch_input_shape=(None, 100, 100, 3)))
+    model.add(Flatten(batch_input_shape=(None, size_x, size_y, 3)))
     model.add(Dense(1, activation=activation))
     model.add(Dense(nb_output))
     model.compile(optimizer=optimizer_param, loss=loss, metrics=['categorical_accuracy'])
@@ -47,14 +36,15 @@ def predict_linear(model, X):
     return res
 
 
-def linear(train_dataset, nb_output, image_size, activation, optimizer, loss, epochs, batch_size, lr, STEPS_PER_EPOCH):
-    # directory = base_path + save_dir
-    # if not os.path.exists(directory):
-    #     os.mkdir(directory)
-    # path = directory + "/model.h5"\
-    model = linear_model(image_size, nb_output,
+def linear(train_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, batch_size, lr, STEPS_PER_EPOCH):
+    name_folder = inspect.stack()[0][3]
+    directory = "..\\models\\" + name_folder + "\\test_change_my_name"
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+
+    model = linear_model(size_x, size_y, nb_output,
                          activation, optimizer, loss, lr, batch_size)
 
-    model = model_fit(model, train_dataset, epochs, batch_size, STEPS_PER_EPOCH)
+    model = model_fit(model, train_dataset, epochs, batch_size, STEPS_PER_EPOCH, directory)
 
     return model
