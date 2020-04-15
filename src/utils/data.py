@@ -10,6 +10,7 @@ from PIL import Image
 from multiprocessing import Pool, Array
 from pathlib import Path
 import matplotlib.pyplot as plt
+import shutil
 
 def move_multiple_images(images, src_dir, dest_dir):
     for img in images:
@@ -30,9 +31,6 @@ def split_dataset(dataset_path, validation_path, percentage):
 
         selected_img = random.sample(images, round(img_to_move))
         move_multiple_images(selected_img, dataset_path + "\\" + dir, validation_path + "\\" + dir)
-
-
-
 
 
 
@@ -147,3 +145,11 @@ def generate_dataset(path, x, y, batch_size):
                        [None, len(CLASS_NAMES)]))
 
     return train_dataset, STEPS_PER_EPOCH
+
+
+def move_validation_to_train_folder(path_validation):
+    for root, directories, filenames in os.walk(path_validation):
+        for filename in filenames:
+            source = os.path.join(root, filename)
+            dest = os.path.join(root, filename).replace("validation", "train")
+            shutil.move(source, dest)
