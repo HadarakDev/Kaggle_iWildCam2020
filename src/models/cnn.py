@@ -41,7 +41,7 @@ def cnn_model(image_size, nb_output, activation, optimizer, loss, lr, array_laye
             model.add(tf.keras.layers.MaxPooling2D((2, 2), padding='same'))
     model.add(tf.keras.layers.Flatten())
     model.add(Dense(nb_output, activation="softmax"))
-    model.compile(optimizer=optimizer_param, loss=loss, metrics=['sparse_categorical_accuracy'])
+    model.compile(optimizer=optimizer_param, loss=loss, metrics=['categorical_accuracy'])
     model.summary()
     return model
 
@@ -52,7 +52,7 @@ def predict_cnn(model, X):
     res = np.argmax((model.predict(img)))
     return res
 
-def cnn_sparse(X_all, Y,  activation, optimizer, loss, epochs, batch_size, lr, save_dir, base_path, array_layers, pooling, kernel_shape,  dropout, l1, l2):
+def cnn(X_all, Y,  activation, optimizer, loss, epochs, batch_size, lr, save_dir, base_path, array_layers, pooling, kernel_shape,  dropout, l1, l2):
 
     image_size = 32 * 32 * 3
     nb_output = np.max(Y) + 1

@@ -1,5 +1,5 @@
 # from src.models.nn_sparse import nn_sparse
-from src.models.linear_sparse import linear
+from src.models.linear import linear
 from src.utils.tools import create_dirs, create_folder_from_categories, move_img_to_category_folder
 from src.utils.data import load_dataset_pool, get_number_of_img_percent, generate_dataset
 import time

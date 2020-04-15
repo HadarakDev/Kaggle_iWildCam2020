@@ -29,7 +29,7 @@ def nn_model(image_size, nb_output, activation, optimizer, loss, lr, array_layer
             model.add(Dense(array_layers[i], activation=activation))
 
     model.add(Dense(nb_output, activation="softmax"))
-    model.compile(optimizer=optimizer_param, loss=loss, metrics=['sparse_categorical_accuracy'])
+    model.compile(optimizer=optimizer_param, loss=loss, metrics=['categorical_accuracy'])
     model.summary()
     return model
 
@@ -40,7 +40,7 @@ def predict_nn(model, X, nb_pixels):
     return res
 
 
-def nn_sparse(X_all, Y, image_size, activation, optimizer, loss, epochs, batch_size, lr, save_dir, base_path,
+def nn(X_all, Y, image_size, activation, optimizer, loss, epochs, batch_size, lr, save_dir, base_path,
               array_layers, dropout, l1, l2):
 
     nb_output = np.max(Y) + 1
