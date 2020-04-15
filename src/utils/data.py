@@ -117,7 +117,7 @@ def generate_dataset(path, x, y, batch_size):
     train_dataset = tf.data.Dataset.from_generator(
         lambda: train_data_gen,
         output_types=(tf.float32, tf.float32),
-        output_shapes=([batch_size, x, y, 3],
-                       [batch_size, len(CLASS_NAMES)]))
+        output_shapes=([None, 100, 100, 3],
+                       [None, len(CLASS_NAMES)]))
 
     return train_dataset, STEPS_PER_EPOCH
