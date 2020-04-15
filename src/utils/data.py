@@ -1,12 +1,38 @@
+import math
 import os
 import glob
 import random
+import shutil
+
 import tensorflow as tf
 import numpy as np
 from PIL import Image
 from multiprocessing import Pool, Array
 from pathlib import Path
 import matplotlib.pyplot as plt
+
+def move_multiple_images(images, src_dir, dest_dir):
+    for img in images:
+        shutil.move(src_dir + "\\" + img, dest_dir + "\\" + img)
+
+def split_dataset(dataset_path, validation_path, percentage):
+    if not os.path.isdir(validation_path):
+        os.mkdir(validation_path)
+    dirs = os.listdir(dataset_path)
+    for dir in dirs:
+        if not os.path.isdir(validation_path + "\\" + dir):
+            os.mkdir(validation_path + "\\" + dir)
+        images = os.listdir(dataset_path + "\\" + dir)
+        nb_images = len(images)
+        print(nb_images)
+        img_to_move = nb_images * percentage
+        print(round(img_to_move))
+
+        selected_img = random.sample(images, round(img_to_move))
+        move_multiple_images(selected_img, dataset_path + "\\" + dir, validation_path + "\\" + dir)
+
+
+
 
 
 
