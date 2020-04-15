@@ -108,19 +108,19 @@ def generate_dataset(path, x, y, batch_size):
     image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
     STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
 
-    train_data_gen = image_generator.flow_from_directory(directory=str(data_dir),
+    data_gen = image_generator.flow_from_directory(directory=str(data_dir),
                                                          batch_size=batch_size,
                                                          shuffle=True,
                                                          target_size=(x, y),
                                                          classes=list(CLASS_NAMES))
 
-    train_dataset = tf.data.Dataset.from_generator(
-        lambda: train_data_gen,
+    dataset = tf.data.Dataset.from_generator(
+        lambda: data_gen,
         output_types=(tf.float32, tf.float32),
         output_shapes=([None, x, y, 3],
                        [None, len(CLASS_NAMES)]))
 
-    return train_dataset, STEPS_PER_EPOCH
+    return dataset, STEPS_PER_EPOCH
 
 
 def move_validation_to_train_folder(path_validation):
