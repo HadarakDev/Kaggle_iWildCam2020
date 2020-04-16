@@ -113,13 +113,13 @@ def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_fol
         except IOError:
             print('cannot open', file)
 
-# path = "..\\..\\..\\dataset\\train\\"
-# new_path = "..\\..\\..\\dataset\\train_resized\\"
+# path = "..\\..\\..\\dataset\\test\\"
+# new_path = "..\\..\\..\\dataset\\test_resized\\"
 # jpg_files = get_all_files_path(path)
 # resize_save_images(jpg_files, 100, 100, path, new_path)
 
 
-def generate_dataset(path, x, y, batch_size):
+def generate_dataset(path, x, y, batch_size, shuffle_data=False):
     data_dir = Path(path)
     image_count = len(list(data_dir.glob('*/*.jpg')))
 
@@ -134,7 +134,7 @@ def generate_dataset(path, x, y, batch_size):
 
     data_gen = image_generator.flow_from_directory(directory=str(data_dir),
                                                          batch_size=batch_size,
-                                                         shuffle=True,
+                                                         shuffle=shuffle_data,
                                                          target_size=(x, y),
                                                          classes=list(CLASS_NAMES))
 
@@ -144,7 +144,35 @@ def generate_dataset(path, x, y, batch_size):
         output_shapes=([None, x, y, 3],
                        [None, len(CLASS_NAMES)]))
 
-    return dataset, STEPS_PER_EPOCH
+    return dataset, STEPS_PER_EPOCH, data_gen.class_indices
+
+
+def generate_dataset(path, x, y, batch_size, shuffle_data=False):
+    data_dir = Path(path)
+    image_count = len(list(data_dir.glob('*/*.jpg')))
+
+    CLASS_NAMES = []
+    for item in data_dir.glob('*'):
+        # dir = os.listdir(item)
+        # if len(dir) != 0:
+            CLASS_NAMES.append(item.name)
+
+    image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
+    STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
+
+    data_gen = image_generator.flow_from_directory(directory=str(data_dir),
+                                                         batch_size=batch_size,
+                                                         shuffle=shuffle_data,
+                                                         target_size=(x, y),
+                                                         classes=list(CLASS_NAMES))
+
+    dataset = tf.data.Dataset.from_generator(
+        lambda: data_gen,
+        output_types=(tf.float32, tf.float32),
+        output_shapes=([None, x, y, 3],
+                       [None, len(CLASS_NAMES)]))
+
+    return dataset, STEPS_PER_EPOCH, data_gen.class_indices
 
 
 def move_validation_to_train_folder(path_validation):

@@ -30,10 +30,7 @@ def linear_model(size_x, size_y, nb_output, activation, optimizer, loss, lr):
     return model
 
 
-def predict_linear(model, X):
-    img = X.reshape(1, 3072)
-    res = np.argmax((model.predict(img)))
-    return res
+
 
 
 def linear(train_dataset, validation_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION):
