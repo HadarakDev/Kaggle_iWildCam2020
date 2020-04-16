@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras.layers import Dense, Flatten, Conv2D
+from tensorflow.keras.layers import Dense, Flatten
 import numpy as np
 import os
 import inspect
@@ -20,7 +20,7 @@ from src.utils.models import model_fit
 """
 
 
-def linear_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, batch_size):
+def linear_model(size_x, size_y, nb_output, activation, optimizer, loss, lr):
     optimizer_param = get_optimizer(optimizer, lr)
     model = tf.keras.Sequential()
     model.add(Flatten(batch_input_shape=(None, size_x, size_y, 3)))
@@ -36,15 +36,15 @@ def predict_linear(model, X):
     return res
 
 
-def linear(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, batch_size, lr, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION):
+def linear(train_dataset, validation_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION):
     name_folder = inspect.stack()[0][3]
     directory = "..\\models\\" + name_folder + "\\test2"
     if not os.path.exists(directory):
         os.mkdir(directory)
 
     model = linear_model(size_x, size_y, nb_output,
-                         activation, optimizer, loss, lr, batch_size)
+                         activation, optimizer, loss, lr)
 
-    model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory)
+    model = model_fit(model, train_dataset, validation_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory)
 
     return model
