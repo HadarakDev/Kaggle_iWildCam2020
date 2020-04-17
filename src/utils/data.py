@@ -122,7 +122,7 @@ def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_fol
 def generate_dataset(path, x, y, batch_size, shuffle_data=False):
     data_dir = Path(path)
     image_count = len(list(data_dir.glob('*/*.jpg')))
-
+    print(image_count)
     CLASS_NAMES = []
     for item in data_dir.glob('*'):
         # dir = os.listdir(item)

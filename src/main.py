@@ -20,28 +20,38 @@ if __name__ == '__main__':
     path_train_folder = "E:\\dataset\\train_resized"
     path_val_folder ="E:\\dataset\\validation_resized"
     path_test_folder = "E:\\dataset\\test_resized"
+
+    # path_train_folder_nico = "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\train_resized"
+    # path_val_folder_nico = "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\validation_resized"
+    # path_test_folder_nico = "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\test_resized"
+
+
+    path_train_folder_nico = "..\\..\\dataset\\train_best_5"
+    path_val_folder_nico ="..\\..\\dataset\\train_best_5"
+    path_test_folder_nico = "..\\..\\dataset\\test_resized"
+
     # # Linear
-    batch = 10000
-    number_of_classes = 267
+    batch = 20000
+    number_of_classes = 5
     size_x = 100
     size_y = 100
-    epochs = 5
+    epochs = 10
     learning_rate = 0.001
 
-    train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices = generate_dataset(path=path_train_folder, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
-    # validation_dataset, STEPS_PER_EPOCH_VALIDATION, _ = generate_dataset(path=path_val_folder, x=size_x, y=size_y, batch_size=batch)
+    train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices = generate_dataset(path=path_train_folder_nico, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
+    validation_dataset, STEPS_PER_EPOCH_VALIDATION, _ = generate_dataset(path=path_val_folder_nico, x=size_x, y=size_y, batch_size=batch)
     # linear_model = linear(train_dataset, validation_dataset, number_of_classes, size_x, size_y, "selu", "adam", "categorical_crossentropy", epochs,
     #                       learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION)
-    # nn_model = nn(train_dataset, validation_dataset, number_of_classes, size_x, size_y, "selu", "adamax", "categorical_crossentropy", epochs,
-    #               learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, [255, 255, 255, 255, 255, 255, 255, 255],
-    #               0.2, 0.1, 0.1)
+    nn_model = nn(train_dataset, validation_dataset, number_of_classes, size_x, size_y, "selu", "adamax", "categorical_crossentropy", epochs,
+                   learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, [255, 255, 255, 255, 255, 255, 255, 255],
+                   0.2, 0.1, 0.1)
 
-    test_dataset, STEPS_PER_EPOCH_TEST, _ = generate_dataset(path=path_test_folder, x=size_x, y=size_y, batch_size=batch)
+    test_dataset, STEPS_PER_EPOCH_TEST, _ = generate_dataset(path=path_test_folder_nico, x=size_x, y=size_y, batch_size=batch)
 
-    model = tf.keras.models.load_model("E:\\Kaggle_iWildCam2020\\models\\nn\\test\\model.h5")
-    result = predict(model, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder)
-    print(result)
-    result.to_csv("E:\\submission.csv", index=False)
+    model = tf.keras.models.load_model("C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\Kaggle_iWildCam2020\\models\\nn\\test\\model.h5")
+    result = predict(model, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder_nico)
+    # print(result)
+    result.to_csv("C:\\Users\\nico_\\Documents\Kaggle_iWildCam2020_Main\\Kaggle_iWildCam2020\\submission2.csv", index=False)
 
 
 # create_folder_from_categories("..\\categories.json")

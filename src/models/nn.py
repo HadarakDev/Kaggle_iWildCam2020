@@ -7,7 +7,7 @@ import inspect
 from tensorflow_core.python.keras.regularizers import L1L2
 
 from src.utils.tools import get_optimizer
-from src.utils.models import model_fit
+from src.utils.models import model_fit, model_fit_no_val
 
 
 def nn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, dropout, l1, l2):
@@ -49,7 +49,15 @@ def nn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optim
 
     model = nn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, dropout, l1, l2)
 
-    model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
+    # model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
+    #                   directory)
+    model = model_fit_no_val(model, train_dataset,epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
                       directory)
 
     return model
+
+
+
+
+
+

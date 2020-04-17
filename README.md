@@ -22,3 +22,10 @@ Bagging avec des models différents
 - Validation avec custom validation ( images 2017 uniquement classe commune avec 2020)
 - Matrix de confusion ( identifié les classes mal prédites )
 - rajouter des datas avec 2018, 2019 ( transfer learning)
+
+
+# Kaggle submission
+
+- cnn with real data ( 100x100 ) => predict only 0 => score 0.395
+- cnn with only 5 top classes => predict 0 and 372 => score 0.389
+- cnn with only 5 top classes and reduced 0 to 17k images => predict 0, 372 and 374 => score 0.164

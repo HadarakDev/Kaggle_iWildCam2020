@@ -27,6 +27,13 @@ def model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN,
     model.save(directory + "\\model.h5")
     return model
 
+def model_fit_no_val(model, train_dataset,  epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory):
+    call_backs = get_callbacks(directory)
+    model.fit_generator(generator=train_dataset,  steps_per_epoch=STEPS_PER_EPOCH_TRAIN,
+                        validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1, use_multiprocessing=True, workers=4) # callbacks=call_backs)
+    model.save(directory + "\\model.h5")
+    return model
+
 
 def predict(model, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder):
     pred = model.predict_generator(test_dataset, verbose=1, steps=STEPS_PER_EPOCH_TEST)
