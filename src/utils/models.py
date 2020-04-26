@@ -5,6 +5,28 @@ import numpy as np
 import pandas as pd
 import json
 
+def create_submit(model_path, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder, submit_path):
+    model = tf.keras.models.load_model(model_path)
+    result = predict(model, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder)
+    result.to_csv(submit_path, index=False)
+
+def use_mega_detector_on_submit(path_mega_detector, path_submit_src, path_submit_dest):
+    with open(path_mega_detector, encoding='utf-8') as json_file:
+        bbox_test_full_json = json.load(json_file)
+        df_submit = pd.read_csv(path_submit_src)
+
+        for i in range(len(df_submit)):
+            if i % 1000 == 0:
+                print(i)
+            id = df_submit.loc[i]["Id"]
+            for n in range(len(bbox_test_full_json["images"])):
+                if id in bbox_test_full_json["images"][n]["file"]:
+                    if bbox_test_full_json["images"][n]["max_detection_conf"] < 0.5:
+                        df_submit.loc[i] = [df_submit.loc[i]["Id"], 0]
+                    bbox_test_full_json["images"].pop(n)
+                    break
+    df_submit.to_csv(path_submit_dest, index=False)
+
 def get_callbacks(log_dir):
     # Tensorboard
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
@@ -20,19 +42,21 @@ def get_accuracy(model, X, Y):
     return accuracy_score(Y, res)
 
 
-def model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory):
+def model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory, model_name):
     call_backs = get_callbacks(directory)
     model.fit_generator(generator=train_dataset, validation_data=test_dataset, steps_per_epoch=STEPS_PER_EPOCH_TRAIN,
-                        validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1, use_multiprocessing=True, workers=4) # callbacks=call_backs)
-    model.save(directory + "\\model.h5")
+                        validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1, use_multiprocessing=True, workers=10) # callbacks=call_backs)
+    model.save(directory + "\\" + model_name + ".h5")
     return model
 
-def model_fit_no_val(model, train_dataset,  epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory):
+def model_fit_no_val(model, train_dataset,  epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory, model_name):
     call_backs = get_callbacks(directory)
     model.fit_generator(generator=train_dataset,  steps_per_epoch=STEPS_PER_EPOCH_TRAIN,
                         validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1, use_multiprocessing=True, workers=4) # callbacks=call_backs)
-    model.save(directory + "\\model.h5")
+    model.save(directory + "\\" + model_name + ".h5")
     return model
+
+
 
 
 def predict(model, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder):

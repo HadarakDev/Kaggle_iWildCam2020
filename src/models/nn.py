@@ -41,7 +41,7 @@ def predict_nn(model, X, nb_pixels):
 
 
 def nn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr,
-       STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, array_layers, dropout, l1, l2):
+       STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, array_layers, dropout, l1, l2, model_name):
     name_folder = inspect.stack()[0][3]
     directory = "..\\models\\" + name_folder + "\\test"
     if not os.path.exists(directory):
@@ -51,8 +51,8 @@ def nn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optim
 
     # model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
     #                   directory)
-    model = model_fit_no_val(model, train_dataset,epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
-                      directory)
+    model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
+                      directory, model_name)
 
     return model
 

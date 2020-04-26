@@ -23,6 +23,11 @@ Bagging avec des models différents
 - Matrix de confusion ( identifié les classes mal prédites )
 - rajouter des datas avec 2018, 2019 ( transfer learning)
 
+# To do
+
+- Clasisication 5 classes uniforme => avec val uniforme
+- tester 
+
 
 # Kaggle submission
 
