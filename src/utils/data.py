@@ -181,3 +181,21 @@ def move_validation_to_train_folder(path_validation):
             source = os.path.join(root, filename)
             dest = os.path.join(root, filename).replace("validation", "train")
             shutil.move(source, dest)
+
+def generate_split_dataset(path, x, y, batch_size, shuffle_data=False):
+    data_dir = Path(path)
+    image_count = len(list(data_dir.glob('*/*/*.jpg')))
+    print(image_count)
+    STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
+    dir_list = os.listdir(path)
+    datasets = []
+    for dir in dir_list:
+        print(dir)
+        datasets.append(generate_dataset(path + "\\" + dir, x, y, batch_size, shuffle_data))
+
+    final_dataset = datasets[0][0].concatenate(datasets[1][0])
+    for i in range(2, len(datasets)):
+        final_dataset = final_dataset.concatenate(datasets[i][0])
+
+    return final_dataset, STEPS_PER_EPOCH, datasets[0][2]
+    # concat all

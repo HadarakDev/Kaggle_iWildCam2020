@@ -2,7 +2,7 @@
 from src.models.linear import linear
 from src.models.nn import nn
 from src.utils.tools import create_dirs, create_folder_from_categories, move_img_to_category_folder, split_cat_data_generator
-from src.utils.data import load_dataset_pool, get_number_of_img_percent, generate_dataset, split_dataset
+from src.utils.data import load_dataset_pool, get_number_of_img_percent, generate_dataset, split_dataset, generate_split_dataset
 from src.utils.models import predict, model_fit, create_submit, use_mega_detector_on_submit
 import time
 import tensorflow as tf
@@ -25,6 +25,8 @@ if __name__ == '__main__':
     path_val_folder_nico ="..\\..\\dataset\\val_resized_without_empty"
     path_test_folder_nico = "..\\..\\dataset\\test_resized"
 
+    path_train_folder_generate = "..\\..\\dataset\\train_resized_data_gen"
+
     # # Linear
     batch = 10000
     number_of_classes = 266
@@ -33,7 +35,7 @@ if __name__ == '__main__':
     epochs = 50
     learning_rate = 0.0001
 
-    train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices = generate_dataset(path=path_train_folder_nico, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
+    train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices = generate_split_dataset(path=path_train_folder_generate, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
     validation_dataset, STEPS_PER_EPOCH_VALIDATION, _ = generate_dataset(path=path_val_folder_nico, x=size_x, y=size_y, batch_size=batch)
     test_dataset, STEPS_PER_EPOCH_TEST, _ = generate_dataset(path=path_test_folder_nico, x=size_x, y=size_y, batch_size=batch)
     #linear_model = linear(train_dataset, validation_dataset, number_of_classes, size_x, size_y, "selu", "adam", "categorical_crossentropy", epochs,
@@ -55,4 +57,4 @@ if __name__ == '__main__':
     # create_folder_from_categories("..\\categories.json")
     # move_img_to_category_folder("..\\annotations\\iwildcam2020_train_annotations.json", "..\\categories.json")
 
-    split_cat_data_generator("..\\annotations\\iwildcam2020_train_annotations.json", "..\\annotations\\categories.json")
+    # split_cat_data_generator("..\\annotations\\iwildcam2020_train_annotations.json", "..\\annotations\\categories.json")
