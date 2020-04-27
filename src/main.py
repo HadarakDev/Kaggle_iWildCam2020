@@ -1,7 +1,7 @@
 # from src.models.nn_sparse import nn_sparse
 from src.models.linear import linear
 from src.models.nn import nn
-from src.utils.tools import create_dirs, create_folder_from_categories, move_img_to_category_folder
+from src.utils.tools import create_dirs, create_folder_from_categories, move_img_to_category_folder, split_cat_data_generator
 from src.utils.data import load_dataset_pool, get_number_of_img_percent, generate_dataset, split_dataset
 from src.utils.models import predict, model_fit, create_submit, use_mega_detector_on_submit
 import time
@@ -54,3 +54,5 @@ if __name__ == '__main__':
     ## REVERT SPLIT
     # create_folder_from_categories("..\\categories.json")
     # move_img_to_category_folder("..\\annotations\\iwildcam2020_train_annotations.json", "..\\categories.json")
+
+    split_cat_data_generator("..\\annotations\\iwildcam2020_train_annotations.json", "..\\annotations\\categories.json")

@@ -1,7 +1,8 @@
 import os
 import json
 from tensorflow.keras.optimizers import Adadelta, Adagrad, Adam, Adamax, Ftrl, Nadam, RMSprop, SGD
-
+from shutil import copyfile
+from pathlib import Path
 
 def get_optimizer(optimizer_param, lr_param):
     if optimizer_param == "adadelta":
@@ -57,3 +58,23 @@ def move_img_to_category_folder(path_json_img, path_categories):
                 print(dir)
             except IOError:
                 print('cannot open', dir)
+
+
+def split_cat_data_generator(path_json_img, path_categories):
+    with open(path_json_img) as json_file1, open(path_categories) as json_file2:
+        data = json.load(json_file1)
+        data2 = json.load(json_file2)
+        dirs = [item["name"] for item in data2["categories"]]
+        dirs = set(dirs)
+        for empty_dir in dirs:
+            for empty_dir2 in dirs:
+                Path("../../dataset/train_resized_data_gen/{}/{}".format(empty_dir, empty_dir2)).mkdir(parents=True, exist_ok=True)
+        for f in data["annotations"]:
+            try:
+                img_name = f["image_id"] + ".jpg"
+                category = f["category_id"]
+                dir = next(item for item in data2["categories"] if item["id"] == category)["name"]
+                copyfile("../../dataset/train_resized/{}/{}".format(dir, img_name),  "../../dataset/train_resized_data_gen/{}/{}/{}".format(dir, dir, img_name))
+            except IOError:
+                print('cannot open', dir)
+
