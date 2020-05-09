@@ -119,7 +119,7 @@ def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_fol
 # resize_save_images(jpg_files, 100, 100, path, new_path)
 
 
-def generate_dataset(path, x, y, batch_size, shuffle_data=False):
+def generate_dataset(path, x, y, batch_size, shuffle_data=False, ratio=1):
     data_dir = Path(path)
     image_count = len(list(data_dir.glob('*/*.jpg')))
     print(image_count)
@@ -128,8 +128,18 @@ def generate_dataset(path, x, y, batch_size, shuffle_data=False):
         # dir = os.listdir(item)
         # if len(dir) != 0:
             CLASS_NAMES.append(item.name)
-
-    image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
+    flip = False
+    if ratio > 0.5:
+        flip = True
+    image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255,
+                                                                      rotation_range=190 * ratio,
+                                                                      width_shift_range=0.9 * ratio,
+                                                                      height_shift_range=0.9 * ratio,
+                                                                      shear_range=0.9 * ratio,
+                                                                      zoom_range=0.9 * ratio,
+                                                                      horizontal_flip=flip,
+                                                                      fill_mode='nearest'
+                                                                      )
     STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
 
     data_gen = image_generator.flow_from_directory(directory=str(data_dir),
@@ -145,35 +155,6 @@ def generate_dataset(path, x, y, batch_size, shuffle_data=False):
                        [None, len(CLASS_NAMES)]))
 
     return dataset, STEPS_PER_EPOCH, data_gen.class_indices
-
-
-def generate_dataset(path, x, y, batch_size, shuffle_data=False):
-    data_dir = Path(path)
-    image_count = len(list(data_dir.glob('*/*.jpg')))
-
-    CLASS_NAMES = []
-    for item in data_dir.glob('*'):
-        # dir = os.listdir(item)
-        # if len(dir) != 0:
-            CLASS_NAMES.append(item.name)
-
-    image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255)
-    STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
-
-    data_gen = image_generator.flow_from_directory(directory=str(data_dir),
-                                                         batch_size=batch_size,
-                                                         shuffle=shuffle_data,
-                                                         target_size=(x, y),
-                                                         classes=list(CLASS_NAMES))
-
-    dataset = tf.data.Dataset.from_generator(
-        lambda: data_gen,
-        output_types=(tf.float32, tf.float32),
-        output_shapes=([None, x, y, 3],
-                       [None, len(CLASS_NAMES)]))
-
-    return dataset, STEPS_PER_EPOCH, data_gen.class_indices
-
 
 def move_validation_to_train_folder(path_validation):
     for root, directories, filenames in os.walk(path_validation):
@@ -189,9 +170,21 @@ def generate_split_dataset(path, x, y, batch_size, shuffle_data=False):
     STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
     dir_list = os.listdir(path)
     datasets = []
+    image_counts = []
     for dir in dir_list:
+        data_dir = Path(path + "\\" + dir)
+        image_count = len(list(data_dir.glob('*/*.jpg')))
+        image_counts.append(image_count)
+
+    print(max(image_counts), min(image_counts))
+    print(image_counts)
+    max_int = max(image_counts)
+    ratios = [abs((x / max_int) - 1.0) for x in image_counts]
+    print(ratios)
+
+    for i, dir in enumerate(dir_list):
         print(dir)
-        datasets.append(generate_dataset(path + "\\" + dir, x, y, batch_size, shuffle_data))
+        datasets.append(generate_dataset(path + "\\" + dir, x, y, batch_size, shuffle_data, ratios[i]))
 
     final_dataset = datasets[0][0].concatenate(datasets[1][0])
     for i in range(2, len(datasets)):
@@ -199,3 +192,5 @@ def generate_split_dataset(path, x, y, batch_size, shuffle_data=False):
 
     return final_dataset, STEPS_PER_EPOCH, datasets[0][2]
     # concat all
+
+
