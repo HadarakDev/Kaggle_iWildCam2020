@@ -41,7 +41,7 @@ if __name__ == '__main__':
     epochs = 30
     learning_rate = 0.0001
     activation = "selu"
-    layers = [64,64,64,64]
+    layers = [512,512,512,512]
     optimizer = "adam"
     name = "nn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_aug_without_empty"
     #

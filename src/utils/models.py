@@ -44,7 +44,7 @@ def get_callbacks(log_dir):
     # Tensorboard
     #tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     # Avoid overfit from accuracy
-    lr_schedule = tf.keras.callbacks.LearningRateScheduler(build_lrfn(0.001, 0.002, 0.0001, 10), verbose=1)
+    lr_schedule = tf.keras.callbacks.LearningRateScheduler(build_lrfn(0.001, 0.005, 0.0001, 15), verbose=1)
     earlystop_callback = EarlyStopping(monitor='categorical_accuracy', min_delta=0.001, patience=5)
     # earlystop_val_callback = EarlyStopping(monitor='val_categorical_accuracy', min_delta=0.0001, patience=10)
     return [earlystop_callback, lr_schedule]
