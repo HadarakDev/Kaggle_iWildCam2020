@@ -9,5 +9,5 @@
     - optimizer = "adam"
     - build_lrfn(0.001, 0.002, 0.0001, 10)
    
-   Name =  
-=> 
+   Name =   nn_8192_30_selu_adam_[64, 64, 64, 64]_aug_without_empty
+-  loss: 2.7290 - categorical_accuracy: 0.3075 - val_loss: 2.7502 - val_categorical_accuracy: 0.3086
