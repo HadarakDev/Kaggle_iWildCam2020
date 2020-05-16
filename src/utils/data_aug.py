@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import time
 
-folder_path = "E:\\dataset\\train_data_aug\\" # CHANGE ME
+folder_path = "..\\..\\..\\dataset\\resized_32\\train_resized_32_folders_aug_equal" # CHANGE ME
 
 def get_image_path(folder_path):
     images = []

@@ -49,12 +49,10 @@ def nn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optim
 
     model = nn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, dropout, l1, l2)
 
-    # model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
-    #                   directory)
-    model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
+    model, history = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
                       directory, model_name)
 
-    return model
+    return model, history
 
 
 

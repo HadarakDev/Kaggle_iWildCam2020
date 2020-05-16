@@ -33,15 +33,15 @@ def linear_model(size_x, size_y, nb_output, activation, optimizer, loss, lr):
 
 
 
-def linear(train_dataset, validation_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION):
+def linear(train_dataset, validation_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, model_name):
     name_folder = inspect.stack()[0][3]
-    directory = "..\\models\\" + name_folder + "\\test2"
+    directory = "..\\models\\" + name_folder + "\\test"
     if not os.path.exists(directory):
         os.mkdir(directory)
 
     model = linear_model(size_x, size_y, nb_output,
                          activation, optimizer, loss, lr)
 
-    model = model_fit(model, train_dataset, validation_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory)
+    model = model_fit(model, train_dataset, validation_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory, model_name)
 
     return model

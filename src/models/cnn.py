@@ -1,3 +1,5 @@
+import inspect
+
 import tensorflow as tf
 from tensorflow.keras.layers import Dense, Dropout
 import numpy as np
@@ -52,20 +54,19 @@ def predict_cnn(model, X):
     res = np.argmax((model.predict(img)))
     return res
 
-def cnn(X_all, Y,  activation, optimizer, loss, epochs, batch_size, lr, save_dir, base_path, array_layers, pooling, kernel_shape,  dropout, l1, l2):
+def cnn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr,
+       STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, array_layers, dropout, l1, l2, model_name):
 
     image_size = 32 * 32 * 3
-    nb_output = np.max(Y) + 1
-    directory = base_path + save_dir
+    name_folder = inspect.stack()[0][3]
+    directory = "..\\models\\" + name_folder + "\\test"
     if not os.path.exists(directory):
         os.mkdir(directory)
-    path = directory + "/model.h5"
 
     X = X_all.reshape(50000, 32, 32, 3)
     kernel_shape_param = int(kernel_shape)
     array_layers = [int(x) for x in array_layers]
 
     model = cnn_model(image_size, nb_output, activation, optimizer, loss, lr, array_layers, pooling, kernel_shape, dropout, l1, l2)
-    model = model_fit(model, X, Y,
-                      epochs, batch_size,
-                      path, save_dir, base_path)
+    model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
+                      directory, model_name)

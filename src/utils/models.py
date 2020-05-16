@@ -27,13 +27,27 @@ def use_mega_detector_on_submit(path_mega_detector, path_submit_src, path_submit
                     break
     df_submit.to_csv(path_submit_dest, index=False)
 
+def build_lrfn(lr_start=0.00001, lr_max=0.00005, lr_min=0.00001, lr_rampup_epochs=5, lr_sustain_epochs=0, lr_exp_decay=.8):
+    def lrfn(epoch):
+        if epoch < lr_rampup_epochs:
+            lr = (lr_max - lr_start) / lr_rampup_epochs * epoch + lr_start
+        elif epoch < lr_rampup_epochs + lr_sustain_epochs:
+            lr = lr_max
+        else:
+            lr = (lr_max - lr_min) *\
+                 lr_exp_decay**(epoch - lr_rampup_epochs\
+                                - lr_sustain_epochs) + lr_min
+        return lr
+    return lrfn
+
 def get_callbacks(log_dir):
     # Tensorboard
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    #tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     # Avoid overfit from accuracy
-    # earlystop_callback = EarlyStopping(monitor='categorical_accuracy', min_delta=0.0001, patience=10)
+    lr_schedule = tf.keras.callbacks.LearningRateScheduler(build_lrfn(0.001, 0.002, 0.0001, 10), verbose=1)
+    earlystop_callback = EarlyStopping(monitor='categorical_accuracy', min_delta=0.001, patience=5)
     # earlystop_val_callback = EarlyStopping(monitor='val_categorical_accuracy', min_delta=0.0001, patience=10)
-    return [tensorboard_callback]
+    return [earlystop_callback, lr_schedule]
 
 
 def get_accuracy(model, X, Y):
@@ -44,10 +58,11 @@ def get_accuracy(model, X, Y):
 
 def model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory, model_name):
     call_backs = get_callbacks(directory)
-    model.fit_generator(generator=train_dataset, validation_data=test_dataset, steps_per_epoch=STEPS_PER_EPOCH_TRAIN,
-                        validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1, use_multiprocessing=True, workers=10) # callbacks=call_backs)
+    # model.fit(train_dataset, test_dataset, STEPS_PER_EPOCH_TRAIN,
+    history = model.fit_generator(generator=train_dataset, validation_data=test_dataset, steps_per_epoch=STEPS_PER_EPOCH_TRAIN,
+                        validation_steps=STEPS_PER_EPOCH_VALIDATION, epochs=epochs, verbose=1, use_multiprocessing=True, workers=12, callbacks=call_backs)
     model.save(directory + "\\" + model_name + ".h5")
-    return model
+    return model, history
 
 def model_fit_no_val(model, train_dataset,  epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory, model_name):
     call_backs = get_callbacks(directory)
@@ -70,7 +85,7 @@ def predict(model, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_
     results = pd.DataFrame({"Id": filenames,
                             "id_left": predictions})
 
-    with open("..\\categories.json") as json_file:
+    with open("..\\annotations\\categories.json") as json_file:
         data = json.load(json_file)
         my_categories = pd.DataFrame(data["categories"])
 

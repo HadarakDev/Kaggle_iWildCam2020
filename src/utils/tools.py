@@ -3,6 +3,24 @@ import json
 from tensorflow.keras.optimizers import Adadelta, Adagrad, Adam, Adamax, Ftrl, Nadam, RMSprop, SGD
 from shutil import copyfile
 from pathlib import Path
+import tensorflow as tf
+from sklearn.metrics import classification_report, confusion_matrix
+import numpy as np
+import matplotlib.pyplot as plt
+
+def calculate_confusion_matrix(validation_generator, model_path, STEPS_PER_EPOCH, class_indices):
+    model = tf.keras.models.load_model(model_path)
+    Y_pred = model.predict_generator(validation_generator, verbose=1, steps=STEPS_PER_EPOCH)
+    y_pred = np.argmax(Y_pred, axis=1)
+    print(y_pred)
+    cm = confusion_matrix(class_indices, y_pred)
+    # fig = plt.figure()
+    # plt.matshow(cm)
+    # plt.title('Problem 1: Confusion Matrix Digit Recognition')
+    # plt.colorbar()
+    # plt.ylabel('True Label')
+    # plt.xlabel('Predicated Label')
+    # plt.savefig('confusion_matrix.jpg')
 
 def get_optimizer(optimizer_param, lr_param):
     if optimizer_param == "adadelta":
@@ -35,17 +53,17 @@ def create_dirs():
             os.mkdir(directory)
 
 
-def create_folder_from_categories(path):
-    with open(path) as json_file:
+def create_folder_from_categories(path_json_categories, dest_path_folder):
+    with open(path_json_categories) as json_file:
         data = json.load(json_file)
         for dir in data["categories"]:
-            directory = "../../dataset/train_resized/" + str(dir["name"])
+            directory = dest_path_folder + str(dir["name"])
+            print(directory)
             if not os.path.exists(directory):
-                print(directory)
                 os.mkdir(directory)
 
 
-def move_img_to_category_folder(path_json_img, path_categories):
+def move_img_to_category_folder(path_json_img, path_categories, dest_path_folder):
     with open(path_json_img) as json_file1, open(path_categories) as json_file2:
         data = json.load(json_file1)
         data2 = json.load(json_file2)
@@ -54,8 +72,7 @@ def move_img_to_category_folder(path_json_img, path_categories):
                 img_name = f["image_id"] + ".jpg"
                 category = f["category_id"]
                 dir = next(item for item in data2["categories"] if item["id"] == category)["name"]
-                os.rename("../../dataset/train_resized/" + img_name, "../../dataset/train_resized/{}/{}".format(dir, img_name))
-                print(dir)
+                os.rename(dest_path_folder + img_name, dest_path_folder + "{}/{}".format(dir, img_name))
             except IOError:
                 print('cannot open', dir)
 

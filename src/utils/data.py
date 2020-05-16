@@ -12,6 +12,23 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import shutil
 
+def create_dataset_equal_classes(nb_images, src_folder, dest_folder):
+    dirs = os.listdir(src_folder)
+    if not os.path.isdir(dest_folder):
+        os.mkdir(dest_folder)
+    for dir in dirs:
+        if not os.path.isdir(dest_folder + "\\" + dir):
+            os.mkdir(dest_folder + "\\" + dir)
+        images = os.listdir(src_folder + "\\" + dir)
+        if len(images) == 0 or len(images) < nb_images:
+            print(len(images))
+            choosen_images = random.sample(images, len(images))
+        else:
+            choosen_images = random.sample(images, nb_images)
+        print(len(choosen_images))
+        move_multiple_images(choosen_images, src_folder + "\\" + dir, dest_folder + "\\" + dir)
+
+
 def move_multiple_images(images, src_dir, dest_dir):
     for img in images:
         shutil.move(src_dir + "\\" + img, dest_dir + "\\" + img)
@@ -25,9 +42,7 @@ def split_dataset(dataset_path, validation_path, percentage):
             os.mkdir(validation_path + "\\" + dir)
         images = os.listdir(dataset_path + "\\" + dir)
         nb_images = len(images)
-        print(nb_images)
         img_to_move = nb_images * percentage
-        print(round(img_to_move))
 
         selected_img = random.sample(images, round(img_to_move))
         move_multiple_images(selected_img, dataset_path + "\\" + dir, validation_path + "\\" + dir)
@@ -105,6 +120,8 @@ def get_all_files_path(path):
 
 
 def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_folder):
+    if os.path.exists(new_path_folder) == False:
+        os.mkdir(new_path_folder)
     for file in jpg_files_list:
         try:
             im = Image.open(path_folder + file)
@@ -113,13 +130,8 @@ def resize_save_images(jpg_files_list, size_x, size_y, path_folder, new_path_fol
         except IOError:
             print('cannot open', file)
 
-# path = "..\\..\\..\\dataset\\test\\"
-# new_path = "..\\..\\..\\dataset\\test_resized\\"
-# jpg_files = get_all_files_path(path)
-# resize_save_images(jpg_files, 100, 100, path, new_path)
 
-
-def generate_dataset(path, x, y, batch_size, shuffle_data=False, ratio=1):
+def generate_dataset(path, x, y, batch_size, shuffle_data=False):
     data_dir = Path(path)
     image_count = len(list(data_dir.glob('*/*.jpg')))
     print(image_count)
@@ -128,16 +140,14 @@ def generate_dataset(path, x, y, batch_size, shuffle_data=False, ratio=1):
         # dir = os.listdir(item)
         # if len(dir) != 0:
             CLASS_NAMES.append(item.name)
-    flip = False
-    if ratio > 0.5:
-        flip = True
+
     image_generator = tf.keras.preprocessing.image.ImageDataGenerator(rescale=1. / 255,
-                                                                      rotation_range=190 * ratio,
-                                                                      width_shift_range=0.9 * ratio,
-                                                                      height_shift_range=0.9 * ratio,
-                                                                      shear_range=0.9 * ratio,
-                                                                      zoom_range=0.9 * ratio,
-                                                                      horizontal_flip=flip,
+                                                                      rotation_range=40,
+                                                                      width_shift_range=0.2,
+                                                                      height_shift_range=0.2,
+                                                                      shear_range=0.2,
+                                                                      zoom_range=0.2,
+                                                                      horizontal_flip=True,
                                                                       fill_mode='nearest'
                                                                       )
     STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
@@ -146,6 +156,7 @@ def generate_dataset(path, x, y, batch_size, shuffle_data=False, ratio=1):
                                                          batch_size=batch_size,
                                                          shuffle=shuffle_data,
                                                          target_size=(x, y),
+                                                         class_mode='categorical',
                                                          classes=list(CLASS_NAMES))
 
     dataset = tf.data.Dataset.from_generator(
@@ -154,7 +165,7 @@ def generate_dataset(path, x, y, batch_size, shuffle_data=False, ratio=1):
         output_shapes=([None, x, y, 3],
                        [None, len(CLASS_NAMES)]))
 
-    return dataset, STEPS_PER_EPOCH, data_gen.class_indices
+    return dataset, STEPS_PER_EPOCH, data_gen.class_indices, data_gen.classes
 
 def move_validation_to_train_folder(path_validation):
     for root, directories, filenames in os.walk(path_validation):
@@ -169,6 +180,7 @@ def generate_split_dataset(path, x, y, batch_size, shuffle_data=False):
     print(image_count)
     STEPS_PER_EPOCH = np.ceil(image_count / batch_size)
     dir_list = os.listdir(path)
+    print(dir_list)
     datasets = []
     image_counts = []
     for dir in dir_list:
@@ -192,5 +204,16 @@ def generate_split_dataset(path, x, y, batch_size, shuffle_data=False):
 
     return final_dataset, STEPS_PER_EPOCH, datasets[0][2]
     # concat all
+#
+# path = "D:\\Wildcam2020\\train\\"
+# new_path = "D:\\Wildcam2020\\train_resized_32\\"
+# path = "..\\..\\dataset\\test\\"
+# new_path = "..\\..\\dataset\\resized_32\\test_resized_32\\"
+
+# print(os.path.exists("C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\test\\"))
+# path = "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\test\\"
+# new_path =  "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\dataset\\resized_32\\test_resized_32\\images\\"
+# jpg_files = get_all_files_path(path)
+# resize_save_images(jpg_files, 32, 32, path, new_path)
 
 
