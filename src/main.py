@@ -38,12 +38,12 @@ if __name__ == '__main__':
     number_of_classes = 266 # 266 withotu empty
     size_x = 32
     size_y = 32
-    epochs = 30
+    epochs = 100
     learning_rate = 0.0001
     activation = "selu"
-    layers = [512,512,512,512]
+    layers = [512,512,512,512, 512,512,512,512]
     optimizer = "adam"
-    name = "nn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_aug_without_empty"
+    name = "nn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_100ep_aug_without_empty"
     #
     train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices, _ = generate_dataset(path=path_train_folder_nico, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
     validation_dataset, STEPS_PER_EPOCH_VALIDATION, _, classes = generate_dataset(path=path_val_folder_nico, x=size_x, y=size_y, batch_size=batch)

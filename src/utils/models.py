@@ -47,7 +47,7 @@ def get_callbacks(log_dir):
     lr_schedule = tf.keras.callbacks.LearningRateScheduler(build_lrfn(0.001, 0.005, 0.0001, 15), verbose=1)
     earlystop_callback = EarlyStopping(monitor='categorical_accuracy', min_delta=0.001, patience=5)
     # earlystop_val_callback = EarlyStopping(monitor='val_categorical_accuracy', min_delta=0.0001, patience=10)
-    return [earlystop_callback, lr_schedule]
+    return [earlystop_callback]
 
 
 def get_accuracy(model, X, Y):

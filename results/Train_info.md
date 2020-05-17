@@ -53,3 +53,16 @@ Name = nn_8192_30_selu_adam_[512, 512, 512, 512]_aug_without_empty
 Name = nn_8192_100_selu_adam_[256, 256, 256, 256]100epochs_aug_without_empty
 - loss: 2.6809 - categorical_accuracy: 0.3211 - val_loss: 2.7007 - val_categorical_accuracy: 0.3221 
 ##### Stop at epochs 47 ( early stopping 0.01)
+
+## 5 no scheduler and more epochs
+    batch = 8192
+    number_of_classes = 266 # 266 withotu empty
+    size_x = 32
+    size_y = 32
+    epochs = 100
+    learning_rate = 0.0001
+    activation = "selu"
+    layers = [512,512,512,512, 512,512,512,512]
+    optimizer = "adam"
+Name = nn_8192_100_selu_adam_[512, 512, 512, 512, 512, 512, 512, 512]_0.0001_100ep_aug_without_empty
+-loss: 2.0487 - categorical_accuracy: 0.4416 - val_loss: 1.9950 - val_categorical_accuracy: 0.4578
