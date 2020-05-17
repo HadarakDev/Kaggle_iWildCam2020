@@ -1,4 +1,4 @@
-1)  
+## 1  
     - batch = 8192
     - number_of_classes = 266 # 266 withotu empty
     - size_x = 32
@@ -12,7 +12,7 @@
    Name =   nn_8192_30_selu_adam_[64, 64, 64, 64]_aug_without_empty
 -  loss: 2.7290 - categorical_accuracy: 0.3075 - val_loss: 2.7502 - val_categorical_accuracy: 0.3086
 
-2)  
+## 2  
     - batch = 8192
     - number_of_classes = 266 # 266 withotu empty
     - size_x = 32
@@ -26,7 +26,7 @@
 Name = nn_8192_30_selu_adam_[256, 256, 256, 256]_aug_without_empty
 - loss: 2.3020 - categorical_accuracy: 0.3914 - val_loss: 2.3198 - val_categorical_accuracy: 0.3903
 
-3)  More ramp and bigger structure
+## 3 More ramp and bigger structure
     - batch = 8192
     - number_of_classes = 266 # 266 withotu empty
     - size_x = 32
@@ -36,3 +36,20 @@ Name = nn_8192_30_selu_adam_[256, 256, 256, 256]_aug_without_empty
     - layers = [512,512,512,512]
     - optimizer = "adam"
     - build_lrfn(0.001, 0.005, 0.0001, 15)
+Name = nn_8192_30_selu_adam_[512, 512, 512, 512]_aug_without_empty
+- loss: 3.6302 - categorical_accuracy: 0.3490 - val_loss: 3.6085 - val_categorical_accuracy: 0.3481
+
+## 4 no scheduler and more epochs
+    batch = 8192
+    number_of_classes = 266 # 266 withotu empty
+    size_x = 32
+    size_y = 32
+    epochs = 100
+    learning_rate = 0.0001
+    activation = "selu"
+    layers = [256, 256, 256, 256]
+    optimizer = "adam"
+ 
+Name = nn_8192_100_selu_adam_[256, 256, 256, 256]100epochs_aug_without_empty
+- loss: 2.6809 - categorical_accuracy: 0.3211 - val_loss: 2.7007 - val_categorical_accuracy: 0.3221 
+##### Stop at epochs 47 ( early stopping 0.01)
