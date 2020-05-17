@@ -13,12 +13,12 @@ from src.utils.tools import get_optimizer
 from src.utils.models import model_fit
 
 
-def cnn_model(image_size, nb_output, activation, optimizer, loss, lr, array_layers, pooling, kernel_shape, dropout, l1, l2):
+def cnn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, pooling, kernel_shape, dropout, l1, l2):
     optimizer_param = get_optimizer(optimizer, lr)
     model = tf.keras.Sequential()
     # if dropout != 0:
-    #     model.add(Dropout(dropout, input_shape=(32, 32, 3)))
-    model.add(tf.keras.layers.Conv2D(filters=array_layers[0], kernel_size=(kernel_shape, kernel_shape), padding='same', activation=activation, input_shape=(32, 32, 3)))
+    #     model.add(Dropout(dropout, input_shape=(size_x, size_y, 3)))
+    model.add(tf.keras.layers.Conv2D(filters=array_layers[0], kernel_size=(kernel_shape, kernel_shape), padding='same', activation=activation, input_shape=(size_x, size_y, 3)))
     if pooling == "avg_pool":
         model.add(tf.keras.layers.AveragePooling2D((2, 2), padding='same'))
     else:
@@ -55,18 +55,33 @@ def predict_cnn(model, X):
     return res
 
 def cnn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr,
-       STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, array_layers, dropout, l1, l2, model_name):
-
-    image_size = 32 * 32 * 3
+       STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, array_layers, dropout, l1, l2, model_name, kernel_shape, pooling):
     name_folder = inspect.stack()[0][3]
     directory = "..\\models\\" + name_folder + "\\test"
     if not os.path.exists(directory):
         os.mkdir(directory)
 
-    X = X_all.reshape(50000, 32, 32, 3)
-    kernel_shape_param = int(kernel_shape)
+    # image_size = size_x * size_y * 3
+
+    #X = train_dataset.reshape(50000, size_x, size_y, 3)
     array_layers = [int(x) for x in array_layers]
 
-    model = cnn_model(image_size, nb_output, activation, optimizer, loss, lr, array_layers, pooling, kernel_shape, dropout, l1, l2)
+    model = cnn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, pooling, kernel_shape, dropout, l1, l2)
     model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
                       directory, model_name)
+    return model
+
+#
+# def nn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr,
+#        STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, array_layers, dropout, l1, l2, model_name):
+#     name_folder = inspect.stack()[0][3]
+#     directory = "..\\models\\" + name_folder + "\\test"
+#     if not os.path.exists(directory):
+#         os.mkdir(directory)
+#
+#     model = nn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, dropout, l1, l2)
+#
+#     model, history = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
+#                       directory, model_name)
+#
+#     return model, history
