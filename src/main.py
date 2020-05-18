@@ -6,6 +6,7 @@ from src.utils.tools import create_dirs, create_folder_from_categories, move_img
 from src.utils.data import load_dataset_pool, get_number_of_img_percent, generate_dataset, split_dataset, \
     generate_split_dataset, create_dataset_equal_classes
 from src.models.cnn import cnn
+from src.models.unet_conv2D import unet_conv2D
 from src.utils.models import predict, model_fit, create_submit, use_mega_detector_on_submit
 import time
 import tensorflow as tf
@@ -42,10 +43,11 @@ if __name__ == '__main__':
     epochs = 100
     learning_rate = 0.0001
     activation = "selu"
-    layers = [5, 5, 5]
+    layers = [5, 5, 5, 5]
     optimizer = "adam"
     loss = "categorical_crossentropy"
     pooling = "avg_pool"
+    kernel_shape = 2
     name = "cnn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_100ep_aug_without_empty"
     #
     train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices, _ = generate_dataset(path=path_train_folder_nico, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
@@ -66,8 +68,13 @@ if __name__ == '__main__':
     #                0, 0, 0, name)
     # pd.DataFrame.from_dict(history.history).to_csv('../results/' + name + ".csv", index=False)
     # CNN
-    cnn = cnn(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer, loss, epochs,
-               learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, layers, 0, 0, 0, name, 2, pooling)
+    # cnn = cnn(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer, loss, epochs,
+    #            learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, layers, 0, 0, 0, name, kernel_shape, pooling)
+
+    # Unet CNN
+    unet_cnn = unet_conv2D(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer,
+                           loss, epochs, learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, layers, 0, 0,
+                           0, name, kernel_shape)
     ## RETRAIN
     # model = tf.keras.models.load_model( "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\Kaggle_iWildCam2020\\models\\nn\\test\\" + name + ".h5")
     # model, history = model_fit(model, train_dataset, validation_dataset, 10, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, "..\\models\\nn\\test", name + "_retrain")

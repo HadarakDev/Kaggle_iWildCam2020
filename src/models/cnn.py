@@ -61,27 +61,9 @@ def cnn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, opti
     if not os.path.exists(directory):
         os.mkdir(directory)
 
-    # image_size = size_x * size_y * 3
-
-    #X = train_dataset.reshape(50000, size_x, size_y, 3)
     array_layers = [int(x) for x in array_layers]
 
     model = cnn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, pooling, kernel_shape, dropout, l1, l2)
     model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
                       directory, model_name)
     return model
-
-#
-# def nn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, optimizer, loss, epochs, lr,
-#        STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, array_layers, dropout, l1, l2, model_name):
-#     name_folder = inspect.stack()[0][3]
-#     directory = "..\\models\\" + name_folder + "\\test"
-#     if not os.path.exists(directory):
-#         os.mkdir(directory)
-#
-#     model = nn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, dropout, l1, l2)
-#
-#     model, history = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
-#                       directory, model_name)
-#
-#     return model, history
