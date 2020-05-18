@@ -36,17 +36,19 @@ if __name__ == '__main__':
     #
     # # Linear
     batch = 8192
-    number_of_classes = 267 # 266 withotu empty
+    number_of_classes = 266 # 266 withotu empty
     size_x = 32
     size_y = 32
     epochs = 100
     learning_rate = 0.0001
     activation = "selu"
-    layers = [5, 5, 5]
+    layers = []
     optimizer = "adam"
     loss = "categorical_crossentropy"
     pooling = "avg_pool"
-    name = "cnn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_100ep_aug_without_empty"
+    name_linear = "lin_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(learning_rate) + "_100ep_aug_without_empty"
+    name_nn = "nn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_100ep_aug_without_empty"
+    name_cnn = "cnn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_100ep_aug_without_empty"
     #
     train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices, _ = generate_dataset(path=path_train_folder_nico, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
     validation_dataset, STEPS_PER_EPOCH_VALIDATION, _, classes = generate_dataset(path=path_val_folder_nico, x=size_x, y=size_y, batch_size=batch)
@@ -57,8 +59,9 @@ if __name__ == '__main__':
 
     # #
     # # ## LINEAR
-    # linear_model = linear(train_dataset, validation_dataset, number_of_classes, size_x, size_y, "selu", "adam", "categorical_crossentropy", epochs,
-    #                       learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, "linear_4096_0.0001_100_selu_adam")
+    linear_model, history = linear(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer, loss, epochs,
+                          learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, name_linear)
+    pd.DataFrame.from_dict(history.history).to_csv('../results/' + name_linear + ".csv", index=False)
 
     # # NN
     # nn_model, history = nn(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer, "categorical_crossentropy", epochs,
@@ -66,8 +69,8 @@ if __name__ == '__main__':
     #                0, 0, 0, name)
     # pd.DataFrame.from_dict(history.history).to_csv('../results/' + name + ".csv", index=False)
     # CNN
-    cnn = cnn(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer, loss, epochs,
-               learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, layers, 0, 0, 0, name, 2, pooling)
+    # cnn = cnn(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer, loss, epochs,
+    #            learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, layers, 0, 0, 0, name, 2, pooling)
     ## RETRAIN
     # model = tf.keras.models.load_model( "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\Kaggle_iWildCam2020\\models\\nn\\test\\" + name + ".h5")
     # model, history = model_fit(model, train_dataset, validation_dataset, 10, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, "..\\models\\nn\\test", name + "_retrain")

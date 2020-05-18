@@ -42,6 +42,6 @@ def linear(train_dataset, validation_dataset, nb_output, size_x, size_y, activat
     model = linear_model(size_x, size_y, nb_output,
                          activation, optimizer, loss, lr)
 
-    model = model_fit(model, train_dataset, validation_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory, model_name)
+    model, history = model_fit(model, train_dataset, validation_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, directory, model_name)
 
-    return model
+    return model, history
