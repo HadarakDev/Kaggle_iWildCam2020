@@ -64,6 +64,6 @@ def cnn(train_dataset, test_dataset, nb_output, size_x, size_y, activation, opti
     array_layers = [int(x) for x in array_layers]
 
     model = cnn_model(size_x, size_y, nb_output, activation, optimizer, loss, lr, array_layers, pooling, kernel_shape, dropout, l1, l2)
-    model = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
+    model,history = model_fit(model, train_dataset, test_dataset, epochs, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION,
                       directory, model_name)
-    return model
+    return model, history
