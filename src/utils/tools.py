@@ -43,7 +43,7 @@ def get_optimizer(optimizer_param, lr_param):
 
 
 def create_dirs():
-    list_dir = ["cnn", "linear", "nn", "cnn"]
+    list_dir = ["cnn", "linear", "nn", "cnn", "unet_conv2D"]
     if not os.path.exists("../models/"):
         os.mkdir("../models/")
     for dir in list_dir:
