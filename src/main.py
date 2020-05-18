@@ -72,9 +72,10 @@ if __name__ == '__main__':
     #            learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, layers, 0, 0, 0, name, kernel_shape, pooling)
 
     # Unet CNN
-    unet_cnn = unet_conv2D(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer,
+    unet_cnn, history = unet_conv2D(train_dataset, validation_dataset, number_of_classes, size_x, size_y, activation, optimizer,
                            loss, epochs, learning_rate, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, layers, 0, 0,
                            0, name, kernel_shape)
+    pd.DataFrame.from_dict(history.history).to_csv('../results/' + name + ".csv", index=False)
     ## RETRAIN
     # model = tf.keras.models.load_model( "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\Kaggle_iWildCam2020\\models\\nn\\test\\" + name + ".h5")
     # model, history = model_fit(model, train_dataset, validation_dataset, 10, STEPS_PER_EPOCH_TRAIN, STEPS_PER_EPOCH_VALIDATION, "..\\models\\nn\\test", name + "_retrain")
