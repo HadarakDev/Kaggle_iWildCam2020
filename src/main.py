@@ -31,30 +31,30 @@ if __name__ == '__main__':
     path_val_folder ="E:\\dataset\\validation_resized"
     path_test_folder = "E:\\dataset\\test_resized"
 
-    path_train_folder_nico = "..\\..\\dataset\\resized_32\\without_empty\\train_resized_32_folders_aug"
-    path_val_folder_nico = "..\\..\\dataset\\resized_32\\without_empty\\val_resized_32_folders_aug"
+    path_train_folder_nico = "..\\..\\dataset\\resized_32\\aug_equal\\train_resized_32_folders_aug_equal_1000"
+    path_val_folder_nico = "..\\..\\dataset\\resized_32\\aug_equal\\train_resized_32_folders_aug_equal_1000"
     path_test_folder_nico = "..\\..\\dataset\\resized_32\\test_resized_32"
     #
     # # Linear
-    batch = 8192
-    number_of_classes = 266 # 266 withotu empty
+    batch = 1000
+    number_of_classes = 267  # 266 withotu empty
     size_x = 32
     size_y = 32
     epochs = 100
     learning_rate = 0.0001
     activation = "selu"
-    layers = []
+    layers = [256,256,256,256]
     optimizer = "adam"
     loss = "categorical_crossentropy"
     pooling = "avg_pool"
     name_linear = "lin_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(learning_rate) + "_aug_without_empty"
-    name_nn = "nn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_aug_without_empty"
-    name_cnn = "cnn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_aug_without_empty"
+    name_nn = "nn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_aug"
+    name_cnn = "cnn_" + str(batch) + "_" + str(epochs) + "_" + activation + "_" + optimizer + "_" + str(layers) + "_" + str(learning_rate) + "_aug"
 
     #
     train_dataset, STEPS_PER_EPOCH_TRAIN, class_indices, _ = generate_dataset(path=path_train_folder_nico, x=size_x, y=size_y, batch_size=batch, shuffle_data=True)
     validation_dataset, STEPS_PER_EPOCH_VALIDATION, _, classes = generate_dataset(path=path_val_folder_nico, x=size_x, y=size_y, batch_size=batch)
-    # test_dataset, STEPS_PER_EPOCH_TEST, _ = generate_dataset(path=path_test_folder_nico, x=size_x, y=size_y, batch_size=batch)
+    test_dataset, STEPS_PER_EPOCH_TEST, _, _ = generate_dataset(path=path_test_folder_nico, x=size_x, y=size_y, batch_size=batch)
 
 
     #calculate_confusion_matrix(validation_dataset, "..\\models\\nn\\test\\nn_4096_0.001_20_selu_adam_[256,256,256,256]_aug_without_empty.h5", STEPS_PER_EPOCH_VALIDATION, classes)
@@ -92,8 +92,8 @@ if __name__ == '__main__':
       #   "C:\\Users\\nico_\\Documents\\Kaggle_iWildCam2020_Main\\Kaggle_iWildCam2020\\models\\nn\\test\\nn_4096_0.0001_10_selu_adam_[64,64,64,64].h5")
     # result = predict(model, test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder_nico)
     # result.to_csv("C:\\Users\\nico_\\Documents\Kaggle_iWildCam2020_Main\\Kaggle_iWildCam2020\\submits\\submissionn_nn_4096_0.0001_10_selu_adam_[64,64,64,64].csv", index=False)
-    #create_submit("..\\models\\nn\\test\\n_4096_0.0001_10_selu_adam_[64,64,64,64]_aug_equal_1000_retrain.h5", test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder_nico, "..\\submits\\submission_nn_32.csv")
-    # use_mega_detector_on_submit('..\\annotations\\bbox_test_full.json',"..\\submits\\submission_nn_32.csv", "..\\submits\\submission_nn_32_empty.csv")
+    #create_submit("..\\models\\cnn\\test\\cnn_1000_100_selu_adam_[256, 256, 256, 256]_0.0001_aug.h5", test_dataset, STEPS_PER_EPOCH_TEST, class_indices, path_test_folder_nico, "..\\submits\\submission_cnn_256_aug.csv")
+    # use_mega_detector_on_submit('..\\annotations\\bbox_test_full.json',"..\\submits\\submission_cnn_256.csv", "..\\submits\\submission_cnn_256_empty.csv")
 
 
 

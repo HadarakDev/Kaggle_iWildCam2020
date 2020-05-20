@@ -82,4 +82,34 @@ Name = nn_8192_100_selu_adam_[512, 512, 512, 512, 512, 512, 512, 512]_0.0001_100
     
     - Name  = lin_8192_100_selu_adam_0.0001_100ep_aug_without_empty
     loss: 7.9390 - categorical_accuracy: 0.0030 - val_loss: 8.8940 - val_categorical_accuracy: 0.0030
+    
+    
+ ## 7 CNN
+     batch = 100
+    number_of_classes = 266 # 266 withotu empty
+    size_x = 32
+    size_y = 32
+    epochs = 100
+    learning_rate = 0.0001
+    activation = "selu"
+    layers = [256,256,256]
+    optimizer = "adam"
+    loss = "categorical_crossentropy"
+    pooling = "avg_pool"
+    cnn_1000_100_selu_adam_[256, 256, 256, 256]_0.0001_aug_without_empty
+    
+## 7 CNN avwc empty
+    batch = 1000
+    number_of_classes = 267  # 266 withotu empty 
+    size_x = 32
+    size_y = 32
+    epochs = 100
+    learning_rate = 0.0001
+    activation = "selu"
+    layers = [256,256,256,256]
+    optimizer = "adam"
+    loss = "categorical_crossentropy"
+    pooling = "avg_pool"
+    cnn_1000_100_selu_adam_[256, 256, 256, 256]_0.0001_aug
+loss: 1.3741 - categorical_accuracy: 0.6187 - val_loss: 1.4019 - val_categorical_accuracy: 0.6151
 

@@ -21,7 +21,7 @@ def use_mega_detector_on_submit(path_mega_detector, path_submit_src, path_submit
             id = df_submit.loc[i]["Id"]
             for n in range(len(bbox_test_full_json["images"])):
                 if id in bbox_test_full_json["images"][n]["file"]:
-                    if bbox_test_full_json["images"][n]["max_detection_conf"] < 0.5:
+                    if bbox_test_full_json["images"][n]["max_detection_conf"] < 0.7:
                         df_submit.loc[i] = [df_submit.loc[i]["Id"], 0]
                     bbox_test_full_json["images"].pop(n)
                     break
